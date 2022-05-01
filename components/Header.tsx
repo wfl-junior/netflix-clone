@@ -21,7 +21,7 @@ const navLinks: NavLink[] = [
     route: "/",
   },
   {
-    label: "Shows",
+    label: "TV Shows",
     route: "#",
   },
   {
@@ -29,7 +29,7 @@ const navLinks: NavLink[] = [
     route: "#",
   },
   {
-    label: "Latest",
+    label: "New & Popular",
     route: "#",
   },
   {
@@ -58,10 +58,10 @@ export const Header: React.FC = () => {
   return (
     <header
       className={classNames(
-        "fixed top-0 py-5 flex justify-between container w-full",
+        "container fixed top-0 flex w-full justify-between py-5",
         shouldHaveBgColor
           ? "bg-background"
-          : "bg-gradient-to-b bg-transparent from-black/70 to-black/0",
+          : "bg-transparent bg-gradient-to-b from-black/70 to-black/0",
       )}
     >
       <div className="flex items-center gap-10">
@@ -80,8 +80,8 @@ export const Header: React.FC = () => {
                     className={classNames(
                       "text-sm transition-colors duration-300",
                       pathname === route
-                        ? "text-white cursor-default font-medium"
-                        : "text-navbar-text hover:text-navbar-text-hover cursor-pointer",
+                        ? "cursor-default font-medium text-white"
+                        : "cursor-pointer text-navbar-text hover:text-navbar-text-hover",
                     )}
                   >
                     {label}
@@ -102,14 +102,14 @@ export const Header: React.FC = () => {
           <FontAwesomeIcon icon={faBell} />
         </button>
 
-        <button className="flex items-center gap-2.5 group">
+        <button className="group flex items-center gap-2.5">
           <img
             src="/profile-image.png"
             alt="User profile image"
-            className="rounded w-8 aspect-square"
+            className="aspect-square w-8 rounded"
           />
 
-          <span className="aspect-square w-2.5 group-hover:rotate-180 transform transition-transform duration-300">
+          <span className="aspect-square w-2.5 transform transition-transform duration-300 group-hover:rotate-180">
             <FontAwesomeIcon icon={faCaretDown} />
           </span>
         </button>
