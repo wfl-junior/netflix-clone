@@ -1,3 +1,4 @@
+import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
@@ -17,6 +18,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
       <div className="h-screen flex flex-col bg-background text-white">
         <Header />
         <Component {...pageProps} />
+        <Footer />
       </div>
     </Fragment>
   );

@@ -1,3 +1,5 @@
+const defaultTheme = require("tailwindcss/defaultTheme");
+
 module.exports = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
@@ -13,7 +15,12 @@ module.exports = {
         background: "#141414",
         "navbar-text": "#e5e5e5",
         "navbar-text-hover": "#b3b3b3",
+        "footer-text": "#808080",
       },
+    },
+    screens: {
+      xs: "425px",
+      ...defaultTheme.screens,
     },
   },
   plugins: [
