@@ -3,8 +3,28 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
-  theme: {
-    extend: {},
+  corePlugins: {
+    container: false,
   },
-  plugins: [],
+  theme: {
+    extend: {
+      colors: {
+        primary: "#e50914",
+        background: "#141414",
+        "navbar-text": "#e5e5e5",
+        "navbar-text-hover": "#b3b3b3",
+      },
+    },
+  },
+  plugins: [
+    function ({ addComponents }) {
+      addComponents({
+        ".container": {
+          maxWidth: "100%",
+          paddingLeft: "3vw",
+          paddingRight: "3vw",
+        },
+      });
+    },
+  ],
 };

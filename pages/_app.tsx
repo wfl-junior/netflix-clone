@@ -1,9 +1,10 @@
+import { Header } from "@/components/Header";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { Fragment } from "react";
 
-const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
+const App: React.FC<AppProps> = ({ Component, pageProps }) => {
   return (
     <Fragment>
       <Head>
@@ -13,9 +14,12 @@ const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Component {...pageProps} />
+      <div className="h-screen flex flex-col bg-background text-white">
+        <Header />
+        <Component {...pageProps} />
+      </div>
     </Fragment>
   );
 };
 
-export default MyApp;
+export default App;
