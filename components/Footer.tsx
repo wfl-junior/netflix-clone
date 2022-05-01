@@ -109,15 +109,17 @@ export const Footer: React.FC = () => {
         </a>
       </div>
 
-      <ul className="grid grid-cols-2 gap-y-3 gap-x-2 md:grid-cols-3 lg:grid-cols-4">
-        {footerLinks.map(({ label, route }) => (
-          <li key={label + route}>
-            <Link href={route}>
-              <a className="hover:underline">{label}</a>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <nav>
+        <ul className="grid grid-cols-2 gap-y-3 gap-x-2 md:grid-cols-3 lg:grid-cols-4">
+          {footerLinks.map(({ label, route }) => (
+            <li key={label + route}>
+              <Link href={route}>
+                <a className="hover:underline">{label}</a>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
       <button className="w-max border border-footer-text py-1 px-1.5 transition-colors hover:text-white">
         Service Code
