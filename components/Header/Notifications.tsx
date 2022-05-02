@@ -7,7 +7,7 @@ import React, { Fragment } from "react";
 export const Notifications: React.FC = () => {
   return (
     <Popover className="relative flex items-center justify-center">
-      <Popover.Button className="aspect-square w-5 transition-colors duration-300 hover:text-navbar-text-hover">
+      <Popover.Button className="aspect-square w-4 transition-colors duration-300 hover:text-navbar-text-hover lg:w-5">
         <FontAwesomeIcon icon={faBell} />
       </Popover.Button>
 
@@ -20,8 +20,8 @@ export const Notifications: React.FC = () => {
         leaveFrom="scale-100 opacity-100"
         leaveTo="scale-95 opacity-0"
       >
-        <Popover.Panel className="absolute top-full right-0 z-40 w-96 translate-y-[20%] transform">
-          <div className="absolute -top-3.5 right-0.5 -z-10 aspect-square w-4 text-white/75">
+        <Popover.Panel className="absolute top-full right-0 z-40 w-60 translate-y-[20%] transform xs:w-80 sm:w-96">
+          <div className="absolute -top-2.5 right-0.5 -z-10 aspect-square w-3 text-white/75 xs:right-0 xs:-top-3.5 xs:w-4">
             <FontAwesomeIcon icon={faCaretUp} />
           </div>
 
@@ -34,17 +34,17 @@ export const Notifications: React.FC = () => {
                       <img
                         src="/images/hourglass_tcard.png"
                         alt="Hourglass Card"
-                        className="translate w-full -translate-x-1 -translate-y-1 rounded shadow"
+                        className="translate w-full -translate-x-1 -translate-y-1 rounded object-cover shadow"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <div className="text-notifications-text transition-colors hover:text-white">
+                    <div className="text-xs text-notifications-text transition-colors hover:text-white xs:text-sm sm:text-base">
                       What's Leaving Netflix Soon Last chance to watch.
                     </div>
 
-                    <span className="text-xs text-notifications-date-text">
+                    <span className="text-[11px] text-notifications-date-text xs:text-xs">
                       1 month ago
                     </span>
                   </div>
