@@ -15,7 +15,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="h-screen flex flex-col bg-background text-white">
+      <div className="flex h-screen flex-col bg-background text-white">
         <Header />
         <Component {...pageProps} />
         <Footer />
