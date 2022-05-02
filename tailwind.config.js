@@ -18,6 +18,7 @@ module.exports = {
         "footer-text": "#808080",
         "notifications-text": "#CCCCCC",
         "notifications-date-text": "#808080",
+        "profile-icon": "#b3b3b3",
       },
     },
     screens: {

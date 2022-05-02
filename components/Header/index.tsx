@@ -1,4 +1,4 @@
-import { faCaretDown, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
 import Link from "next/link";
@@ -6,12 +6,13 @@ import React, { useEffect, useState } from "react";
 import { Logo } from "../Logo";
 import { Navigation } from "./Navigation";
 import { Notifications } from "./Notifications";
+import { Profile } from "./Profile";
 
 export const Header: React.FC = () => {
   const [shouldHaveBgColor, setShouldHaveBgColor] = useState(false);
 
   useEffect(() => {
-    function listener() {
+    function handleScroll() {
       const condition = window.scrollY > 0;
 
       if (condition !== shouldHaveBgColor) {
@@ -19,8 +20,8 @@ export const Header: React.FC = () => {
       }
     }
 
-    document.addEventListener("scroll", listener);
-    return () => document.removeEventListener("scroll", listener);
+    document.addEventListener("scroll", handleScroll);
+    return () => document.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
@@ -48,18 +49,7 @@ export const Header: React.FC = () => {
         </button>
 
         <Notifications />
-
-        <button className="group flex items-center gap-2.5">
-          <img
-            src="/images/profile-image.png"
-            alt="User profile image"
-            className="aspect-square w-7 rounded object-cover xs:w-8"
-          />
-
-          <span className="aspect-square w-2.5 transform transition-transform duration-300 group-hover:rotate-180">
-            <FontAwesomeIcon icon={faCaretDown} />
-          </span>
-        </button>
+        <Profile />
       </div>
     </header>
   );
