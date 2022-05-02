@@ -79,7 +79,9 @@ const ProfileLink: React.FC<Link & { children?: React.ReactNode }> = ({
           </div>
 
           <span
-            className={classNames("text-sm text-white", { underline: active })}
+            className={classNames("text-xs text-white sm:text-sm", {
+              underline: active,
+            })}
           >
             {label}
           </span>

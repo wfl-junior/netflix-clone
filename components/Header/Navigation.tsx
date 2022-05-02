@@ -102,7 +102,7 @@ export const Navigation: React.FC = () => {
                           <Link href={route}>
                             <a
                               className={classNames(
-                                "block py-4 text-center text-sm transition-colors duration-300",
+                                "block py-4 text-center text-xs transition-colors duration-300 sm:text-sm",
                                 isCurrentRoute
                                   ? "cursor-default font-medium text-white"
                                   : "cursor-pointer text-navbar-text",
