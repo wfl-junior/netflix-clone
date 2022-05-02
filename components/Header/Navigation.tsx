@@ -93,22 +93,33 @@ export const Navigation: React.FC = () => {
 
               <nav>
                 <ul className="flex flex-col border border-white/20 bg-black/75 before:absolute before:inset-x-0 before:top-0 before:border-t-2 before:border-white/75">
-                  {navLinks.map(({ label, route }) => (
-                    <li key={label + route}>
-                      <Link href={route}>
-                        <a
-                          className={classNames(
-                            "block py-4 text-center text-sm transition-colors duration-300 hover:bg-black/90",
-                            pathname === route
-                              ? "cursor-default font-medium text-white"
-                              : "cursor-pointer text-navbar-text hover:text-navbar-text-hover",
-                          )}
-                        >
-                          {label}
-                        </a>
-                      </Link>
-                    </li>
-                  ))}
+                  {navLinks.map(({ label, route }) => {
+                    const isCurrentRoute = pathname === route;
+
+                    return (
+                      <Menu.Item as="li" key={label + route}>
+                        {({ active }) => (
+                          <Link href={route}>
+                            <a
+                              className={classNames(
+                                "block py-4 text-center text-sm transition-colors duration-300",
+                                isCurrentRoute
+                                  ? "cursor-default font-medium text-white"
+                                  : "cursor-pointer text-navbar-text",
+                                {
+                                  "bg-black": active,
+                                  "text-navbar-text-hover":
+                                    active && !isCurrentRoute,
+                                },
+                              )}
+                            >
+                              {label}
+                            </a>
+                          </Link>
+                        )}
+                      </Menu.Item>
+                    );
+                  })}
                 </ul>
               </nav>
             </Menu.Items>
