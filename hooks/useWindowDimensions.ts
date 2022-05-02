@@ -11,12 +11,14 @@ const getWindowDimensions = (): WindowDimensions => ({
 });
 
 export const useWindowDimensions = () => {
-  const [windowDimensions, setWindowDimensions] = useState(() => {
-    return getWindowDimensions();
+  const [windowDimensions, setWindowDimensions] = useState<WindowDimensions>({
+    width: 0,
+    height: 0,
   });
 
   useEffect(() => {
     const handleResize = () => setWindowDimensions(getWindowDimensions());
+    handleResize();
 
     window.addEventListener("resize", handleResize);
     window.addEventListener("orientationchange", handleResize);
