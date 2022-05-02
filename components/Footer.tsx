@@ -73,7 +73,7 @@ export const Footer: React.FC = () => {
     <footer className="mx-auto mt-auto flex w-full max-w-[980px] flex-col gap-5 py-5 px-4 text-[13px] text-footer-text">
       <div className="ml-4 flex items-center gap-8 text-white">
         <a
-          href="https://www.facebook.com/netflixbrasil"
+          href="https://www.facebook.com/netflix"
           target="_blank"
           className="aspect-square w-3.5"
           aria-label="Facebook"
@@ -82,7 +82,7 @@ export const Footer: React.FC = () => {
         </a>
 
         <a
-          href="https://www.instagram.com/NetflixBrasil"
+          href="https://www.instagram.com/Netflix"
           target="_blank"
           className="aspect-square w-5"
           aria-label="Instagram"
@@ -91,7 +91,7 @@ export const Footer: React.FC = () => {
         </a>
 
         <a
-          href="https://twitter.com/NetflixBrasil"
+          href="https://twitter.com/Netflix"
           target="_blank"
           className="aspect-square w-6"
           aria-label="Twitter"
@@ -100,7 +100,7 @@ export const Footer: React.FC = () => {
         </a>
 
         <a
-          href="https://www.youtube.com/user/NetflixBRA"
+          href="https://www.youtube.com/user/NewOnNetflix"
           target="_blank"
           className="aspect-square w-6"
           aria-label="YouTube"
