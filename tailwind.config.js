@@ -16,6 +16,8 @@ module.exports = {
         "navbar-text": "#e5e5e5",
         "navbar-text-hover": "#b3b3b3",
         "footer-text": "#808080",
+        "notifications-text": "#CCCCCC",
+        "notifications-date-text": "#808080",
       },
     },
     screens: {
