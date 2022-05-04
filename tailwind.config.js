@@ -20,6 +20,16 @@ module.exports = {
         "notifications-date-text": "#808080",
         "profile-icon": "#b3b3b3",
       },
+      animation: {
+        "grow-search-bar": "grow-search-bar 400ms ease-in-out forwards",
+      },
+      keyframes: {
+        "grow-search-bar": {
+          "0%": { width: "10%", "margin-left": "auto", opacity: "0" },
+          "10%": { width: "10%", "margin-left": "auto", opacity: "1" },
+          "100%": { width: "100%", "margin-left": "auto", opacity: "1" },
+        },
+      },
     },
     screens: {
       xs: "425px",
