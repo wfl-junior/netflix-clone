@@ -19,6 +19,9 @@ module.exports = {
         "notifications-text": "#CCCCCC",
         "notifications-date-text": "#808080",
         "profile-icon": "#b3b3b3",
+        "movie-section-title": "#e5e5e5",
+        "movie-section-pagination-indicator": "#4d4d4d",
+        "movie-section-pagination-indicator-active": "#aaaaaa",
       },
       animation: {
         "grow-search-bar": "grow-search-bar 400ms ease-in-out forwards",
@@ -43,6 +46,17 @@ module.exports = {
           maxWidth: "100%",
           paddingLeft: "3vw",
           paddingRight: "3vw",
+        },
+      });
+    },
+    function ({ addComponents }) {
+      addComponents({
+        ".no-scrollbar": {
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
         },
       });
     },
