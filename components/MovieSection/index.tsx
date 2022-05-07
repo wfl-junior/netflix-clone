@@ -5,13 +5,7 @@ import { useUpdateEffect } from "@/hooks/useUpdateEffect";
 import { getBackdropImagePrefix } from "@/utils/getBackdropImagePrefix";
 import { match } from "@/utils/match";
 import classNames from "classnames";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import type SwiperType from "swiper";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -31,23 +25,9 @@ export const MovieSection: React.FC<MovieSectionProps> = ({
   const isFirstScroll = useRef(true);
   const [hovering, setHovering] = useState(false);
   const sliderRef = useRef<HTMLDivElement & { swiper: SwiperType }>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const forceUpdate = useForceUpdate();
   const breakpoint = useBreakpoint();
   const activeIndex = useRef(initialSlide);
-
-  useEffect(() => {
-    const handleFocusIn = () => setHovering(true);
-    const handleFocusOut = () => setHovering(false);
-
-    containerRef.current?.addEventListener("focusin", handleFocusIn);
-    containerRef.current?.addEventListener("focusout", handleFocusOut);
-
-    return () => {
-      containerRef.current?.removeEventListener("focusin", handleFocusIn);
-      containerRef.current?.removeEventListener("focusout", handleFocusOut);
-    };
-  }, []);
 
   useUpdateEffect(() => {
     if (isFirstScroll.current) {
@@ -120,10 +100,11 @@ export const MovieSection: React.FC<MovieSectionProps> = ({
       </div>
 
       <div
-        ref={containerRef}
         className="relative"
         onMouseEnter={() => setHovering(true)}
         onMouseLeave={() => setHovering(false)}
+        onFocus={() => setHovering(true)}
+        onBlur={() => setHovering(false)}
       >
         {isFirstScroll.current ? (
           <div
