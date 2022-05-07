@@ -1,4 +1,4 @@
-import { useWindowDimensions } from "@/hooks/useWindowDimensions";
+import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Menu, Transition } from "@headlessui/react";
@@ -37,9 +37,9 @@ const navLinks: NavLink[] = [
 
 export const Navigation: React.FC = () => {
   const { pathname } = useRouter();
-  const { width } = useWindowDimensions();
+  const isLargeScreen = useBreakpoint("lg");
 
-  return width >= 1024 ? (
+  return isLargeScreen ? (
     <nav>
       <ul className="flex items-center gap-5">
         {navLinks.map(({ label, route }) => (

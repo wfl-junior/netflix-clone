@@ -1,10 +1,12 @@
 import { Movie } from "@/@types/tmdb";
+import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { useForceUpdate } from "@/hooks/useForceUpdate";
-import { useWindowDimensions } from "@/hooks/useWindowDimensions";
 import { getBackdropImagePrefix } from "@/utils/getBackdropImagePrefix";
+import { match } from "@/utils/match";
 import classNames from "classnames";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import SwiperType, { Navigation } from "swiper";
+import type SwiperType from "swiper";
+import { Navigation } from "swiper";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { SliderButton } from "./SliderButton";
@@ -20,10 +22,10 @@ export const MovieSection: React.FC<MovieSectionProps> = ({
 }) => {
   const isFirstScroll = useRef(true);
   const [hovering, setHovering] = useState(false);
-  const { width } = useWindowDimensions();
   const sliderRef = useRef<HTMLDivElement & { swiper: SwiperType }>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const forceUpdate = useForceUpdate();
+  const breakpoint = useBreakpoint();
 
   useEffect(() => {
     const handleFocusIn = () => setHovering(true);
@@ -38,30 +40,17 @@ export const MovieSection: React.FC<MovieSectionProps> = ({
     };
   }, []);
 
-  let perPage = 2;
-
-  switch (true) {
-    case width >= 1280: {
-      perPage = 6;
-      break;
-    }
-    case width >= 1024: {
-      perPage = 5;
-      break;
-    }
-    case width >= 768: {
-      perPage = 4;
-      break;
-    }
-    case width >= 640: {
-      perPage = 3;
-      break;
-    }
-    default: {
-      perPage = 2;
-      break;
-    }
-  }
+  const perPage = match(
+    breakpoint,
+    {
+      sm: 3,
+      md: 4,
+      lg: 5,
+      xl: 6,
+      "2xl": 6,
+    },
+    2,
+  );
 
   const totalPages = Math.floor(movies.length / perPage);
 
