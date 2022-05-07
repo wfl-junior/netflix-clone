@@ -44,8 +44,7 @@ module.exports = {
       addComponents({
         ".container": {
           maxWidth: "100%",
-          paddingLeft: "3vw",
-          paddingRight: "3vw",
+          paddingInline: "var(--container-padding)",
         },
       });
     },

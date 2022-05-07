@@ -27,7 +27,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
 
 const Home: NextPage<HomeProps> = ({ popular, nowPlaying, topRated }) => {
   return (
-    <main className="mt-24 mb-8 flex flex-col gap-[3vw]">
+    <main className="my-8 flex flex-col gap-[3vw]">
       <MovieSection title="Popular" movies={popular.results} />
       <MovieSection title="Now Playing" movies={nowPlaying.results} />
       <MovieSection title="Top Rated" movies={topRated.results} />

@@ -32,4 +32,8 @@
   *::after {
     font-family: "Netflix Sans", sans-serif;
   }
+
+  :root {
+    --container-padding: min(60px, 4vw);
+  }
 }

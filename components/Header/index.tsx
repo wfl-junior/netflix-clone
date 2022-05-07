@@ -26,7 +26,7 @@ export const Header: React.FC = () => {
   return (
     <header
       className={classNames(
-        "container fixed top-0 z-50 flex w-full items-center justify-between py-2.5 lg:py-5",
+        "container sticky top-0 z-50 flex w-full items-center justify-between py-2.5 lg:py-5",
         shouldHaveBgColor
           ? "bg-background"
           : "bg-transparent bg-gradient-to-b from-black/70 to-black/0",

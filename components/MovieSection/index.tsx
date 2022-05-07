@@ -1,16 +1,12 @@
-import { Tuple } from "@/@types/app";
 import { Movie } from "@/@types/tmdb";
+import { useForceUpdate } from "@/hooks/useForceUpdate";
 import { useWindowDimensions } from "@/hooks/useWindowDimensions";
-import { batchMovies } from "@/utils/batchMovies";
+import { getBackdropImagePrefix } from "@/utils/getBackdropImagePrefix";
 import classNames from "classnames";
-import React, {
-  Fragment,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { MovieBatch } from "./MovieBatch";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import SwiperType, { Navigation } from "swiper";
+import "swiper/css";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { SliderButton } from "./SliderButton";
 
 interface MovieSectionProps {
@@ -18,72 +14,29 @@ interface MovieSectionProps {
   movies: Movie[];
 }
 
-const containerPadding = 0.03;
-const translateXProperty = "--tw-translate-x";
-const sliderTransitionClassNames = ["transition-transform", "duration-500"];
-
 export const MovieSection: React.FC<MovieSectionProps> = ({
   title,
   movies,
 }) => {
   const isFirstScroll = useRef(true);
-  const [currentPage, setCurrentPage] = useState(1);
   const [hovering, setHovering] = useState(false);
-  const [animating, setAnimating] = useState(false);
   const { width } = useWindowDimensions();
-  const sliderRef = useRef<HTMLDivElement>(null);
+  const sliderRef = useRef<HTMLDivElement & { swiper: SwiperType }>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const forceUpdate = useForceUpdate();
 
   useEffect(() => {
-    sliderRef.current?.style.setProperty(translateXProperty, "0");
-  }, [currentPage, sliderRef.current]);
+    const handleFocusIn = () => setHovering(true);
+    const handleFocusOut = () => setHovering(false);
 
-  const swapPage = useCallback(
-    (type: "previous" | "next") => {
-      if (animating) return;
+    containerRef.current?.addEventListener("focusin", handleFocusIn);
+    containerRef.current?.addEventListener("focusout", handleFocusOut);
 
-      setAnimating(true);
-
-      const nextPage =
-        type === "previous"
-          ? currentPage === 1
-            ? totalPages
-            : currentPage - 1
-          : currentPage === totalPages
-          ? 1
-          : currentPage + 1;
-
-      if (sliderRef.current) {
-        sliderRef.current.classList.add(...sliderTransitionClassNames);
-
-        sliderRef.current.style.setProperty(
-          translateXProperty,
-          `${
-            (sliderRef.current.offsetWidth -
-              window.innerWidth * containerPadding) *
-            (type === "previous" ? 1 : -1)
-          }px`,
-        );
-
-        const eventToListenTo: keyof HTMLElementEventMap = "transitionend";
-
-        const handleTransitionEnd = function (this: typeof sliderRef.current) {
-          this.classList.remove(...sliderTransitionClassNames);
-          setCurrentPage(nextPage);
-          this.removeEventListener(eventToListenTo, handleTransitionEnd);
-        };
-
-        sliderRef.current.addEventListener(
-          eventToListenTo,
-          handleTransitionEnd,
-        );
-      }
-
-      if (isFirstScroll.current) {
-        isFirstScroll.current = false;
-      }
-    },
-    [animating, sliderRef.current],
-  );
+    return () => {
+      containerRef.current?.removeEventListener("focusin", handleFocusIn);
+      containerRef.current?.removeEventListener("focusout", handleFocusOut);
+    };
+  }, []);
 
   let perPage = 2;
 
@@ -111,41 +64,27 @@ export const MovieSection: React.FC<MovieSectionProps> = ({
   }
 
   const totalPages = Math.floor(movies.length / perPage);
-  const movieBatches = batchMovies(movies, perPage);
 
-  const getPreviousPage = useCallback(
-    (page: number) => (page === 1 ? totalPages : page - 1),
+  const swapPage = useCallback(
+    (type: "previous" | "next") => {
+      if (sliderRef.current) {
+        if (type === "previous") {
+          sliderRef.current.swiper.slidePrev();
+        } else {
+          sliderRef.current.swiper.slideNext();
+        }
+      }
+
+      if (isFirstScroll.current) {
+        isFirstScroll.current = false;
+      }
+    },
     [totalPages],
   );
-
-  const getNextPage = useCallback(
-    (page: number) => (page === totalPages ? 1 : page + 1),
-    [totalPages],
-  );
-
-  const previousPage = getPreviousPage(currentPage);
-  const nextPage = getNextPage(currentPage);
-
-  const getMovieBatchForPage = useCallback(
-    (page: number) => movieBatches[page - 1],
-    [movieBatches],
-  );
-
-  const currentBatch = getMovieBatchForPage(currentPage);
-
-  const previousBatches: Tuple<Movie[]> = [
-    getMovieBatchForPage(previousPage === 1 ? totalPages : previousPage - 1),
-    getMovieBatchForPage(previousPage),
-  ];
-
-  const nextBatches: Tuple<Movie[]> = [
-    getMovieBatchForPage(nextPage),
-    getMovieBatchForPage(nextPage === totalPages ? 1 : nextPage + 1),
-  ];
 
   return (
     <section className="flex flex-col gap-4">
-      <div className="group container flex items-center justify-between">
+      <div className="container flex w-full items-center justify-between">
         <h2 className="cursor-pointer text-xs font-bold text-movie-section-title transition-colors hover:text-white sm:text-sm md:text-base lg:text-[1.4vw]">
           {title}
         </h2>
@@ -156,7 +95,9 @@ export const MovieSection: React.FC<MovieSectionProps> = ({
               key={page}
               className={classNames(
                 "h-0.5 w-3",
-                currentPage === page
+                Math.floor(
+                  (sliderRef.current?.swiper.realIndex || 0) / perPage + 1,
+                ) === page
                   ? "bg-movie-section-pagination-indicator-active"
                   : "bg-movie-section-pagination-indicator",
               )}
@@ -168,39 +109,48 @@ export const MovieSection: React.FC<MovieSectionProps> = ({
       </div>
 
       <div
+        ref={containerRef}
         className="relative"
         onMouseEnter={() => setHovering(true)}
         onMouseLeave={() => setHovering(false)}
       >
-        {hovering && (
-          <Fragment>
-            {!isFirstScroll.current && (
-              <SliderButton type="previous" swapPage={swapPage} />
-            )}
-
-            <SliderButton type="next" swapPage={swapPage} />
-          </Fragment>
+        {!isFirstScroll.current && (
+          <SliderButton
+            type="previous"
+            swapPage={swapPage}
+            hovering={hovering}
+          />
         )}
 
-        <div className="no-scrollbar snap-x snap-proximity overflow-x-auto">
-          <div
-            ref={sliderRef}
-            className="container flex transform touch-pan-y items-center gap-[0.5vw]"
-            style={{ width: `calc(100% - 0.5vw * ${perPage})` }}
-            onTransitionEnd={() => setAnimating(false)}
-          >
-            {!isFirstScroll.current &&
-              previousBatches.map(movies => (
-                <MovieBatch key={movies[0].id} movies={movies} />
-              ))}
+        <SliderButton type="next" swapPage={swapPage} hovering={hovering} />
 
-            <MovieBatch movies={currentBatch} />
-
-            {nextBatches.map(movies => (
-              <MovieBatch key={movies[0].id} movies={movies} />
+        <Swiper
+          // @ts-ignore
+          ref={sliderRef}
+          loop
+          spaceBetween={5}
+          modules={[Navigation]}
+          slidesPerView={perPage}
+          slidesPerGroup={perPage}
+          speed={750}
+          breakpoints={{ 1536: { spaceBetween: 7 } }}
+          onSlideChange={forceUpdate}
+          className="!container"
+          loopAdditionalSlides={perPage}
+        >
+          {movies
+            .slice(0, movies.length - (movies.length % totalPages))
+            .map(movie => (
+              <SwiperSlide key={movie.id}>
+                <img
+                  data-title={movie.title}
+                  src={getBackdropImagePrefix("w500") + movie.backdrop_path}
+                  alt={`Backdrop image for the movie ${movie.title}`}
+                  className="aspect-video max-w-full cursor-pointer rounded object-cover"
+                />
+              </SwiperSlide>
             ))}
-          </div>
-        </div>
+        </Swiper>
       </div>
     </section>
   );
