@@ -12,7 +12,6 @@ import React, {
   useState,
 } from "react";
 import type SwiperType from "swiper";
-import { Navigation } from "swiper";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { SliderButton } from "./SliderButton";
@@ -70,10 +69,12 @@ export const MovieSection: React.FC<MovieSectionProps> = ({
   const swapPage = useCallback(
     (type: "previous" | "next") => {
       if (sliderRef.current) {
+        const { swiper } = sliderRef.current;
+
         if (type === "previous") {
-          sliderRef.current.swiper.slidePrev();
+          swiper.slidePrev();
         } else {
-          sliderRef.current.swiper.slideNext();
+          swiper.slideNext();
         }
       }
 
@@ -116,7 +117,12 @@ export const MovieSection: React.FC<MovieSectionProps> = ({
         onMouseEnter={() => setHovering(true)}
         onMouseLeave={() => setHovering(false)}
       >
-        {!isFirstScroll.current && (
+        {isFirstScroll.current ? (
+          <div
+            className="absolute left-0 z-10 h-full w-[var(--container-padding)] bg-background"
+            aria-hidden="true"
+          ></div>
+        ) : (
           <SliderButton
             type="previous"
             swapPage={swapPage}
@@ -130,14 +136,13 @@ export const MovieSection: React.FC<MovieSectionProps> = ({
           // @ts-ignore
           ref={sliderRef}
           loop
-          spaceBetween={breakpoint === "2xl" ? 7 : 5}
-          modules={[Navigation]}
+          spaceBetween={5}
           slidesPerView={perPage}
           slidesPerGroup={perPage}
           speed={750}
           onSlideChange={forceUpdate}
           className="!container"
-          loopAdditionalSlides={perPage}
+          breakpoints={{ 1536: { spaceBetween: 7 } }}
         >
           {movies
             .slice(0, movies.length - (movies.length % totalPages))
