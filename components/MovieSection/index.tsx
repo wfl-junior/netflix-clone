@@ -1,6 +1,7 @@
 import { Movie } from "@/@types/tmdb";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { useForceUpdate } from "@/hooks/useForceUpdate";
+import { useUpdateEffect } from "@/hooks/useUpdateEffect";
 import { getBackdropImagePrefix } from "@/utils/getBackdropImagePrefix";
 import { match } from "@/utils/match";
 import classNames from "classnames";
@@ -21,6 +22,8 @@ interface MovieSectionProps {
   movies: Movie[];
 }
 
+const initialSlide = 0;
+
 export const MovieSection: React.FC<MovieSectionProps> = ({
   title,
   movies,
@@ -31,6 +34,7 @@ export const MovieSection: React.FC<MovieSectionProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const forceUpdate = useForceUpdate();
   const breakpoint = useBreakpoint();
+  const activeIndex = useRef(initialSlide);
 
   useEffect(() => {
     const handleFocusIn = () => setHovering(true);
@@ -44,6 +48,12 @@ export const MovieSection: React.FC<MovieSectionProps> = ({
       containerRef.current?.removeEventListener("focusout", handleFocusOut);
     };
   }, []);
+
+  useUpdateEffect(() => {
+    if (isFirstScroll.current) {
+      activeIndex.current = sliderRef.current?.swiper.realIndex || 0;
+    }
+  }, [sliderRef.current?.swiper.realIndex]);
 
   const perPage = useMemo(
     () =>
@@ -98,9 +108,7 @@ export const MovieSection: React.FC<MovieSectionProps> = ({
               key={page}
               className={classNames(
                 "h-0.5 w-3",
-                Math.floor(
-                  (sliderRef.current?.swiper.realIndex || 0) / perPage + 1,
-                ) === page
+                Math.floor(activeIndex.current / perPage + 1) === page
                   ? "bg-movie-section-pagination-indicator-active"
                   : "bg-movie-section-pagination-indicator",
               )}
@@ -140,9 +148,18 @@ export const MovieSection: React.FC<MovieSectionProps> = ({
           slidesPerView={perPage}
           slidesPerGroup={perPage}
           speed={750}
-          onSlideChange={forceUpdate}
           className="!container"
           breakpoints={{ 1536: { spaceBetween: 7 } }}
+          initialSlide={initialSlide}
+          onSlideChange={() => {
+            if (isFirstScroll.current) {
+              forceUpdate();
+            }
+          }}
+          onSlideChangeTransitionEnd={() => {
+            activeIndex.current = sliderRef.current?.swiper.realIndex || 0;
+            forceUpdate();
+          }}
         >
           {movies
             .slice(0, movies.length - (movies.length % totalPages))
