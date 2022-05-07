@@ -151,9 +151,13 @@ export const MovieSection: React.FC<MovieSectionProps> = ({
           className="!container"
           breakpoints={{ 1536: { spaceBetween: 7 } }}
           initialSlide={initialSlide}
-          onSlideChange={() => {
+          onSlideChange={swiper => {
             if (isFirstScroll.current) {
               forceUpdate();
+
+              if (swiper.touches.diff) {
+                isFirstScroll.current = false;
+              }
             }
           }}
           onSlideChangeTransitionEnd={() => {
