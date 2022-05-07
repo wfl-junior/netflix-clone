@@ -4,7 +4,13 @@ import { useForceUpdate } from "@/hooks/useForceUpdate";
 import { getBackdropImagePrefix } from "@/utils/getBackdropImagePrefix";
 import { match } from "@/utils/match";
 import classNames from "classnames";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type SwiperType from "swiper";
 import { Navigation } from "swiper";
 import "swiper/css";
@@ -40,19 +46,26 @@ export const MovieSection: React.FC<MovieSectionProps> = ({
     };
   }, []);
 
-  const perPage = match(
-    breakpoint,
-    {
-      sm: 3,
-      md: 4,
-      lg: 5,
-      xl: 6,
-      "2xl": 6,
-    },
-    2,
+  const perPage = useMemo(
+    () =>
+      match(
+        breakpoint,
+        {
+          sm: 3,
+          md: 4,
+          lg: 5,
+          xl: 6,
+          "2xl": 6,
+        },
+        2,
+      ),
+    [breakpoint],
   );
 
-  const totalPages = Math.floor(movies.length / perPage);
+  const totalPages = useMemo(
+    () => Math.floor(movies.length / perPage),
+    [movies.length, perPage],
+  );
 
   const swapPage = useCallback(
     (type: "previous" | "next") => {
@@ -117,12 +130,11 @@ export const MovieSection: React.FC<MovieSectionProps> = ({
           // @ts-ignore
           ref={sliderRef}
           loop
-          spaceBetween={5}
+          spaceBetween={breakpoint === "2xl" ? 7 : 5}
           modules={[Navigation]}
           slidesPerView={perPage}
           slidesPerGroup={perPage}
           speed={750}
-          breakpoints={{ 1536: { spaceBetween: 7 } }}
           onSlideChange={forceUpdate}
           className="!container"
           loopAdditionalSlides={perPage}
