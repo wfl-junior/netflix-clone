@@ -1,3 +1,4 @@
+import { useMovieSectionContext } from "@/contexts/MovieSectionContext";
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
@@ -5,15 +6,11 @@ import React from "react";
 
 interface SliderButtonProps {
   type: "previous" | "next";
-  swapPage: (type: "previous" | "next") => void;
-  hovering: boolean;
 }
 
-export const SliderButton: React.FC<SliderButtonProps> = ({
-  type,
-  swapPage,
-  hovering,
-}) => {
+export const SliderButton: React.FC<SliderButtonProps> = ({ type }) => {
+  const { active, swapPage } = useMovieSectionContext();
+
   return (
     <button
       className={classNames(
@@ -24,7 +21,7 @@ export const SliderButton: React.FC<SliderButtonProps> = ({
     >
       <span className="sr-only">Slide to {type}</span>
 
-      {hovering && (
+      {active && (
         <FontAwesomeIcon
           icon={type === "previous" ? faAngleLeft : faAngleRight}
           className="w-2/5 transform transition-transform duration-300 group-hover:scale-110"
