@@ -15,13 +15,14 @@ import type SwiperType from "swiper";
 interface IMovieSectionContext extends MovieSectionProps {
   active: boolean;
   setActive: React.Dispatch<React.SetStateAction<boolean>>;
-  isFirstScroll: React.MutableRefObject<boolean>;
   totalPages: number;
   swapPage: (type: "previous" | "next") => void;
   initialSlide: number;
   perPage: number;
   activePage: number;
   updateActiveIndex: () => void;
+  hasMoved: boolean;
+  updateHasMoved: () => void;
   sliderRef: React.RefObject<
     HTMLDivElement & {
       swiper: SwiperType;
@@ -40,7 +41,7 @@ const initialSlide = 0;
 export const MovieSectionContextProvider: React.FC<
   MovieSectionContextProviderProps
 > = ({ children, movies, ...props }) => {
-  const isFirstScroll = useRef(true);
+  const [hasMoved, setHasMoved] = useState(false);
   const [active, setActive] = useState(false);
   const breakpoint = useBreakpoint();
   const [activeIndex, setActiveIndex] = useState(initialSlide);
@@ -51,13 +52,20 @@ export const MovieSectionContextProvider: React.FC<
       setActiveIndex(sliderRef.current?.swiper.realIndex || 0);
     }, [sliderRef.current]);
 
+  const updateHasMoved: IMovieSectionContext["updateHasMoved"] =
+    useCallback(() => {
+      if (!hasMoved) {
+        setHasMoved(true);
+      }
+    }, [hasMoved]);
+
   useUpdateEffect(() => {
-    if (isFirstScroll.current) {
+    if (!hasMoved) {
       updateActiveIndex();
     }
   }, [sliderRef.current?.swiper.realIndex]);
 
-  const perPage = useMemo(
+  const perPage: IMovieSectionContext["perPage"] = useMemo(
     () =>
       match(
         breakpoint,
@@ -73,7 +81,7 @@ export const MovieSectionContextProvider: React.FC<
     [breakpoint],
   );
 
-  const totalPages = useMemo(
+  const totalPages: IMovieSectionContext["totalPages"] = useMemo(
     () => Math.floor(movies.length / perPage),
     [movies.length, perPage],
   );
@@ -90,14 +98,12 @@ export const MovieSectionContextProvider: React.FC<
         }
       }
 
-      if (isFirstScroll.current) {
-        isFirstScroll.current = false;
-      }
+      updateHasMoved();
     },
     [sliderRef.current],
   );
 
-  const activePage = useMemo(
+  const activePage: IMovieSectionContext["activePage"] = useMemo(
     () => Math.floor(activeIndex / perPage + 1),
     [activeIndex, perPage],
   );
@@ -109,7 +115,6 @@ export const MovieSectionContextProvider: React.FC<
         movies,
         active,
         setActive,
-        isFirstScroll,
         totalPages,
         swapPage,
         initialSlide,
@@ -117,6 +122,8 @@ export const MovieSectionContextProvider: React.FC<
         sliderRef,
         updateActiveIndex,
         activePage,
+        updateHasMoved,
+        hasMoved,
       }}
     >
       {children}
